@@ -1,0 +1,146 @@
+{% extends 'todoapp\base.html' %}
+{% block 'main' %}
+
+
+    <div class="row">
+        <div class="col-md-12 ">
+            <h1 class="text-bg-primary p-1 mt-4 text-center">Task Planner</h1>
+        </div> <!---heading end-->
+       
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="text-bg-primary p-2 mt-4 text-center">Add Task</h3>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="first" class="form-label" ><strong>Task Name</strong></label>
+                    <input type="text" class="form-control" id="first" name="tname" placeholder="Enter task name">
+                </div>
+                <div class="mb-3">
+                    <label for="second" class="form-label" ><strong>Enter Task Details</strong></label>
+                    <textarea class="form-control" id="second" rows="3" name="tdetail"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <select class="form-select" name="cat" aria-label="Default select example">
+                        <option>Select Category</option>
+                        <option value="1">Office</option>
+                        <option value="2">Personal</option>
+                    </select>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="0" name="status" id="ongoing" checked>
+                    <label class="form-check-label" for="ongoing">
+                      Ongoing
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" value="1" name="status" id="completed">
+                    <label class="form-check-label" for="completed">
+                      Completed
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fifth" class="form-label" ><strong>Due Date</strong></label>
+                    <input type="date" class="form-control" id="fifth" name="duedate">
+                </div>
+
+                <div class="mb-3">
+                    <input type="submit" value="Create Task" class="btn btn-danger">
+                </div>
+            </form>
+        </div><!--form end-->
+
+        <div class="col-md-8">
+            <h3 class="text-bg-primary p-2 mt-4 text-center">Task List</h3>
+
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Task Name</th>
+                    <th>Task Details</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>End Date</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+
+                </tr>
+                {% for x in data %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{x.name}}</td>
+                    <td>{{x.detail}}</td>
+                    {% if x.cat == '1' %}
+                    <td>Office</td>
+                    {% else %}
+                    <td>Personal</td>
+                    {% endif %}
+                    {% if x.status == 0 %}
+                    <td>Ongoing</td>
+                    {% else %}
+                    <td>Completed</td>
+                    {% endif %}
+                    <td>{{x.enddate}}</td>
+                    <td><a href="/edit/{{x.id}}"><button class="btn btn-warning">Edit</button></a></td>
+                    <td><a href="/delete/{{x.id}}"><button class="btn btn-danger">Delete</button></a></td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div><!--Table end-->
+       
+    </div>
+    <hr>
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            <h5>By Category</h5>
+            <p><a class="anchor" href="/dashboard">All</a></p>
+            <p><a class="anchor" href="/catfilter/1">Office</a></p>
+            <p><a class="anchor" href="/catfilter/2">Personal</a></p>
+        </div>
+
+        <div class="col-md-3">
+            <h5>By Status</h5>
+            <p><a class="anchor" href="/dashboard">All</a></p>
+            <p><a class="anchor" href="/statusfilter/0">Ongoing</a></p>
+            <p><a class="anchor" href="/statusfilter/1">Completed</a></p>
+
+        </div>
+
+        <div class="col-md-3">
+            <h5>By Date</h5>
+            
+            <p><a class="anchor" href="/datesort/0">Oldest</a></p>
+            <p><a class="anchor" href="/datesort/1">Newest</a></p>
+
+        </div>
+
+        <div class="col-md-3">
+            <h5>Between Date</h5>
+            <form method="GET" action="/datefilter">
+            <div class="mb-3">
+                <label for="one" class="form-label"><strong>From<strong></label>&nbsp;&nbsp;{{x.enddate}}
+                <input type="date" name="from" class="form-control" id="one">
+            </div>
+            <div class="mb-3">
+                <label for="two" class="form-label"><strong>To:<strong></label>&nbsp;&nbsp;{{x.enddate}}
+                <input type="date" name="to" class="form-control" id="two">
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Search">
+            </div>
+            </form>  
+        </div>
+    </div>
+
+
+
+
+
+{% endblock 'main' %}
